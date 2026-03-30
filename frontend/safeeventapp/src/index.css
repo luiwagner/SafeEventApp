@@ -1,0 +1,41 @@
+@import "tailwindcss";
+
+:root {
+  /* Primärfarben — Wärme & Erde */
+  --p-walnut: #8B6F47;
+  --p-sandalwood: #C4956A;
+  --p-sage: #4A6741;
+  --p-slate: #3D5A73;
+
+  /* Neutrale — Hintergrund & Struktur */
+  --n-linen: #FAF8F5;
+  --n-white: #ffffff;
+  --n-sand: #EDE8DF;
+  --n-greige: #B5A898;
+  --t-dark: #3A3028; /* Dark Roast als Anker für Text */
+
+  /* Ring-Farbe für Fokus-Effekte (passend zum Salbei-Grün) */
+  --color-ring: rgba(74, 103, 65, 0.4);
+}
+
+@theme {
+  /* Mapping der v4-Utilities auf deine neuen Variablen */
+  --color-primary: #8B6F47;
+  --color-primary-hover: #C4956A;
+  --color-accent: #4A6741;
+  --color-trust: #3D5A73;
+  
+  --color-main: #3A3028;
+  --color-muted: #4A6741;
+  
+  --color-card: #ffffff;
+  --color-bg: #FAF8F5;
+  --color-border: #EDE8DF;
+}
+
+body {
+  margin: 0;
+  background-color: var(--n-linen);
+  color: var(--t-dark);
+  font-family: 'Inter', sans-serif; /* Empfehlung für dieses Schema */
+}
