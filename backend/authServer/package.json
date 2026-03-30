@@ -1,0 +1,26 @@
+{
+  "name": "safeeventapp",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "dev": "node authServer.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/luiwagner/SafeEventApp.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/luiwagner/SafeEventApp/issues"
+  },
+  "homepage": "https://github.com/luiwagner/SafeEventApp#readme",
+  "dependencies": {
+    "bcrypt": "^6.0.0",
+    "cookie-parser": "^1.4.7",
+    "dotenv": "^17.3.1",
+    "express": "^5.2.1",
+    "jsonwebtoken": "^9.0.3"
+  }
+}

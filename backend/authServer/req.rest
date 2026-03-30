@@ -1,0 +1,40 @@
+GET http://localhost:3000/posts
+Authorization: Bearer 
+###
+
+POST http://localhost:3000/auth/login
+Content-Type: application/json
+
+{
+    "email": "a@test.com",
+    "password": "ich bin ein Passwort"
+}
+
+###
+
+POST http://localhost:3000/auth/updateAccessToken
+Content-Type: application/json
+
+{
+    "token": 
+}
+
+###
+
+POST http://localhost:3000/auth/register
+Content-Type: application/json
+
+{
+    "email": "a@test.com",
+    "firstName": "",
+    "surname": "",
+    "password": ""
+}
+
+###
+
+DELETE  http://localhost:3000/auth/logout
+
+###
+
+PUT  http://localhost:3000/auth/updatePassword
