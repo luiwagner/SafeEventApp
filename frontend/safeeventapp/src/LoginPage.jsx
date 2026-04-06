@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { Eye, EyeOff, Mail, Lock, User, Code, Globe } from 'lucide-react';
+import { authService } from './services/authService';
 
 /** * 1. Sub-Komponente: InputField
  * Nutzt zentrale Variablen für Rahmen, Fokus-Ringe und Icons.
@@ -61,9 +63,13 @@ const SocialButton = ({ icon: Icon, label }) => (
 /** * 3. Haupt-Komponente: LoginPage
  */
 const LoginPage = () => {
+  const navigate = useNavigate();
   const [isLogin, setIsLogin] = useState(true);
+  const [isError, setIsError] = useState("");
+  const [registrationSuccess, setRegistrationSuccess] = useState(false);
   const [formData, setFormData] = useState({
-    name: '',
+    firstname: '',
+    lastname: '',
     email: '',
     password: ''
   });
@@ -75,6 +81,29 @@ const LoginPage = () => {
   const handleSubmit = (e) => {
     e.preventDefault();
     console.log(isLogin ? "Login Event" : "Register Event", formData);
+    if(isLogin) {
+      authService.login(formData.email, formData.password)
+        .then(data => {
+          if(data.loginSuccessful) {
+            setRegistrationSuccess(true);
+            setIsError("");
+            navigate("/dashboard");
+          } else {
+            setRegistrationSuccess(false);
+            setIsError("Login fehlgeschlagen. Bitte überprüfe deine Eingaben.");
+          }
+        })
+        .catch(() => setIsError("Ein Fehler ist aufgetreten. Bitte versuche es später erneut."));
+    } else {
+      authService.register(formData.email, formData.firstname, formData.lastname, formData.password)
+        .then(() => {
+          setRegistrationSuccess(true);
+          setIsError("");
+          setIsLogin(true);
+        })
+        .catch(() => setIsError("Registrierung fehlgeschlagen. Bitte versuche es später erneut."));
+
+    }
   };
 
   return (
@@ -114,15 +143,26 @@ const LoginPage = () => {
         {/* Formular */}
         <form className="mt-8 space-y-5" onSubmit={handleSubmit}>
           {!isLogin && (
-            <InputField 
-              label="Name"
-              type="text"
-              name="name"
-              icon={User}
-              value={formData.name}
-              onChange={handleChange}
-              placeholder="Max Mustermann"
-            />
+            <>
+              <InputField 
+                label="Vorname"
+                type="text"
+                name="firstname"
+                icon={User}
+                value={formData.firstname}
+                onChange={handleChange}
+                placeholder="Max"
+                />
+              <InputField 
+                label="Nachname"
+                type="text"
+                name="lastname"
+                icon={User}
+                value={formData.lastname}
+                onChange={handleChange}
+                placeholder="Mustermann"
+                />
+            </>
           )}
 
           <InputField 
@@ -160,6 +200,18 @@ const LoginPage = () => {
             {isLogin ? 'Jetzt anmelden' : 'Konto erstellen'}
           </button>
         </form>
+        <>
+          {(isError != "") && (
+            <div className="bg-red-100 text-red-700 p-3 rounded-md text-sm mt-4">
+              {isError}
+            </div>
+          )}
+          {registrationSuccess && (
+            <div className="bg-green-100 text-green-700 p-3 rounded-md text-sm mt-4">
+              Registrierung erfolgreich! Du kannst dich jetzt anmelden.
+            </div>
+          )}
+        </>
 
         {/* Social Login Divider */}
         <div className="relative my-8">

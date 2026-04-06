@@ -4,17 +4,21 @@ const jwt          = require("jsonwebtoken");
 const bcrypt       = require("bcrypt");
 const crypto       = require("crypto");
 const cookieParser = require("cookie-parser");
+const cors        = require("cors");
 
 const app = express();
 app.use(express.json());
 app.use(cookieParser());
+app.use(cors());
+
 
 let refreshTokens = [];
 let users         = [];
 
 app.post("/auth/register", async (req, res) => {
-  if (!req.body.email || !req.body.firstName || !req.body.surname ||!req.body.password) {
-    return res.status(400).send("Email, first name, surname and password are required!");
+  console.log("Received registration request:", req.body);
+  if (!req.body.email || !req.body.firstname || !req.body.lastname ||!req.body.password) {
+    return res.status(400).send("Email, first name, lastname and password are required!");
   }
   if (validateEmail(req.body.email)) {
     return res.status(400).send('No valid Email')
@@ -22,7 +26,7 @@ app.post("/auth/register", async (req, res) => {
   try {
     const userId         = crypto.randomUUID();
     const hashedPassword = await bcrypt.hash(req.body.password, 12);
-    await createUser(userId, req.body.email, req.body.firstName, req.body.surname, hashedPassword);
+    await createUser(userId, req.body.email, req.body.firstname, req.body.lastname, hashedPassword);
     res.status(201).send(`User with the Mail "${req.body.email}" created successfully`);
   } catch {
     res.status(500).send(`Error creating the User with the Mail "${req.body.email}"`);
@@ -30,6 +34,7 @@ app.post("/auth/register", async (req, res) => {
 });
 
 app.post("/auth/login", async (req, res) => {
+  console.log("Received login request:", req.body);
   if (!req.body.email || !req.body.password) {
     return res.status(400).send("Email and password required");
   }
@@ -115,8 +120,8 @@ function validateEmail(email) {
     );
 };
 
-async function createUser(userId, email, firstName, surname, hashedPassword) {
-  users.push({ userId, email, firstName, surname, hashedPassword });
+async function createUser(userId, email, firstname, lastname, hashedPassword) {
+  users.push({ userId, email, firstname, lastname, hashedPassword });
 }
 
 function generateAccessToken(userId, role) {
